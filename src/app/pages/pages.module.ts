@@ -4,6 +4,7 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComponentModule } from '../components/component.module';
+import { MockendProvider } from '../interceptors/mockend.provider';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,9 @@ import { ComponentModule } from '../components/component.module';
     NgbModule.forRoot(),
     ComponentModule
   ],
-  providers: [],
+  providers: [
+    MockendProvider
+  ],
   bootstrap: []
 })
 export class PagesModule { }
