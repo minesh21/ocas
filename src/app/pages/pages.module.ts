@@ -5,10 +5,12 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComponentModule } from '../components/component.module';
 import { MockendProvider } from '../interceptors/mockend.provider';
+import { ActivityListPage } from './activity-list/activity-list.component';
 
 @NgModule({
   declarations: [
-    RegisterPage
+    RegisterPage,
+    ActivityListPage
   ],
   imports: [
     CommonModule,
