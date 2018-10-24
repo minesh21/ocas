@@ -1,0 +1,39 @@
+<div class="container mt-3">
+  <h3>Employee Activities</h3>
+
+  <div class="row">
+    <ng-container *ngIf="employees && employees.length > 0">
+      <div class="col-md-4" *ngFor="let employee of (employees.slice(start, end))">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-5">
+                <img [src]="'assets/avatar.png'" class="img-fluid" />
+              </div>
+              <div class="col-md">
+                <h5 class="card-title">Employee</h5>
+                <small class="card-text"><b>Employee:</b> {{employee.first_name}} {{employee.last_name}}</small><br/>
+                <small class="card-text"><b>Email:</b> {{employee.email}}</small><br />
+                <small class="card-text"><b>Activity:</b> {{employee.activity}}</small>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm btn-pink" (click)="openCommentModal(employee.comments)">Comments</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="mt-2" *ngIf="employees">
+    <ngb-pagination [collectionSize]="employees.length"
+                    [(page)]="page"
+                    [maxSize]="MAX_SIZE"
+                    [pageSize]="PAGE_SIZE"
+                    [rotate]="true"
+                    [boundaryLinks]="true"
+                    (pageChange)="changePage($event)"></ngb-pagination>
+
+  </div>
+</div>
+<app-loader *ngIf="loading"></app-loader>

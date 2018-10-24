@@ -1,0 +1,10 @@
+.img-thumbnail {
+  background: #F06292;
+  border-color: #F06292;
+  box-shadow: none;
+}
+
+.btn-pink {
+  color: white;
+  background: #F06292;
+}

@@ -4,6 +4,21 @@ import { Observable, of, throwError } from 'rxjs';
 import { Employee } from '../interfaces/employee';
 import {  delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
+/**
+ * MockendInterceptor
+ * -------------------------------------------------------------
+ *
+ * credit: http://jasonwatmore.com/post/2018/06/22/angular-6-mock-backend-example-for-backendless-development
+ * @author: Minesh Varu
+ * @description:
+ *    This interceptor will intercept incoming HTTP requests and ignore all other requests. This is used simply
+ *    to simulate a backend, to test service calls from  employee service. This mock backend simulates a simple
+ *    employee activity registration and stores the data in local storage, this is also where services to load
+ *    employee information is handled as well. The idea is to either write or read from local storage in order
+ *    for the data to persist among all components, and using shared modules as well. All validations are done
+ *    in this simulated backend as well as response are sent back to the service that is calling the api on this
+ *    "backend".
+ */
 @Injectable()
 export class MockendInterceptor implements HttpInterceptor {
 
@@ -19,16 +34,19 @@ export class MockendInterceptor implements HttpInterceptor {
         if (req.url.endsWith('/user/register') && req.method === 'POST') {
             const data = req.body;
 
+            // Validation to check if all required fields are populated
             if (!this.isRequiredFilled(data)) {
               return of(new HttpResponse({status: 400, body: {status: 'bad', message: 'Please fill all required fields'} }));
             }
 
+            // Validation to check if email is valid
             if (!this.isValidEmail(data.email)) {
               return of(new HttpResponse({status: 400, body: {status: 'bad', message: 'Not a valid email'} }));
             }
 
+            // Validation check to see if user is unique, no duplicates!
             if (!this.isUniqueUser(employees, data.email)) {
-              return of(new HttpResponse({status: 400, body: {status: 'bad', message: 'User with this email already exists'} }));
+              return of(new HttpResponse({status: 400, body: {status: 'bad', message: 'Employee with this email already exists'} }));
             }
 
             employees.push(data);
@@ -38,7 +56,12 @@ export class MockendInterceptor implements HttpInterceptor {
 
         // list
         if (req.url.endsWith('/user/list') && req.method === 'GET') {
-          // code here
+
+          if (employees.length === 0) {
+            return of(new HttpResponse({status: 400, body: {status: 'bad', message: 'No Activities Found!'} }));
+          }
+
+          return of(new HttpResponse({status: 200, body: {status: 'ok', data: employees} }));
         }
 
         // overlook any other requests not handled
@@ -63,6 +86,7 @@ export class MockendInterceptor implements HttpInterceptor {
 
 }
 
+// Export this interceptor class as a provider to use in appropriate module
 export let MockendProvider = {
   provide: HTTP_INTERCEPTORS,
   useClass: MockendInterceptor,
